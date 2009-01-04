@@ -1,6 +1,8 @@
 SOURCES += app2.cpp \
-           main.cpp
-HEADERS += app2.h
+           main.cpp \
+ featurepoint.cpp
+HEADERS += app2.h \
+ featurepoint.h
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \

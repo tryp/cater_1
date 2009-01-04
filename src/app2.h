@@ -31,6 +31,9 @@ class app2: public QMainWindow
         bool saveAs();
         void about();
         void documentWasModified();
+    void zoomIn();
+    void zoomOut();
+       
 
     private:
         void createActions();
@@ -49,7 +52,7 @@ class app2: public QMainWindow
         QString curFile;
 
         QMenu *fileMenu;
-        QMenu *editMenu;
+        QMenu *viewMenu;
         QMenu *helpMenu;
         QToolBar *fileToolBar;
         QToolBar *editToolBar;
@@ -58,14 +61,23 @@ class app2: public QMainWindow
         QAction *saveAct;
         QAction *saveAsAct;
         QAction *exitAct;
-        QAction *cutAct;
-        QAction *copyAct;
-        QAction *pasteAct;
         QAction *aboutAct;
         QAction *aboutQtAct;
+
+        QAction *zoomInAct;
+        QAction *zoomOutAct;
+
         QGraphicsScene *scene;
     QGraphicsView *view;
+    QImage *image;
+    double minScale;
+
+    void createZoomActions();
+    void createAboutActions();
+    void createFileActions();
+    void fitViewToImage();
 protected:
+    double zoomFactor;
 };
 
 #endif

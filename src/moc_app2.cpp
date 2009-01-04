@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'app2.h'
 **
-** Created: Sun Jan 4 13:18:56 2009
+** Created: Sun Jan 4 16:54:31 2009
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_app2[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   10, // methods
+       8,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
@@ -34,6 +34,8 @@ static const uint qt_meta_data_app2[] = {
       35,    5,   23,    5, 0x08,
       44,    5,    5,    5, 0x08,
       52,    5,    5,    5, 0x08,
+      74,    5,    5,    5, 0x08,
+      83,    5,    5,    5, 0x08,
 
        0        // eod
 };
@@ -41,6 +43,7 @@ static const uint qt_meta_data_app2[] = {
 static const char qt_meta_stringdata_app2[] = {
     "app2\0\0newFile()\0open()\0bool\0save()\0"
     "saveAs()\0about()\0documentWasModified()\0"
+    "zoomIn()\0zoomOut()\0"
 };
 
 const QMetaObject app2::staticMetaObject = {
@@ -76,8 +79,10 @@ int app2::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
         case 4: about(); break;
         case 5: documentWasModified(); break;
+        case 6: zoomIn(); break;
+        case 7: zoomOut(); break;
         }
-        _id -= 6;
+        _id -= 8;
     }
     return _id;
 }

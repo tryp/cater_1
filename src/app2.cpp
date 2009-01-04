@@ -11,9 +11,12 @@
 app2::app2()
 {
     scene = new QGraphicsScene;
-    //view.setRenderHint(QPainter::Antialiasing);
 
     view = new QGraphicsView(scene);
+    //view->setRenderHint(QPainter::Antialiasing);
+    view->setAlignment(Qt::AlignLeft | Qt::AlignTop);    
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     setCentralWidget(view);
 
@@ -24,9 +27,6 @@ app2::app2()
     createStatusBar();
 
     readSettings();
-
-    //connect(textEdit->document(), SIGNAL(contentsChanged()),
-    //        this, SLOT(documentWasModified()));
 
     setCurrentFile("");
 }
@@ -44,7 +44,6 @@ void app2::closeEvent(QCloseEvent *event)
 void app2::newFile()
 {
     if (maybeSave()) {
-        //textEdit->clear();
         setCurrentFile("");
     }
 }
@@ -91,62 +90,9 @@ void app2::documentWasModified()
 
 void app2::createActions()
 {
-    newAct = new QAction(QIcon(":/filenew.xpm"), tr("&New"), this);
-    newAct->setShortcut(tr("Ctrl+N"));
-    newAct->setStatusTip(tr("Create a new file"));
-    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
-
-    openAct = new QAction(QIcon(":/fileopen.xpm"), tr("&Open..."), this);
-    openAct->setShortcut(tr("Ctrl+O"));
-    openAct->setStatusTip(tr("Open an existing file"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-
-    saveAct = new QAction(QIcon(":/filesave.xpm"), tr("&Save"), this);
-    saveAct->setShortcut(tr("Ctrl+S"));
-    saveAct->setStatusTip(tr("Save the document to disk"));
-    connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
-
-    saveAsAct = new QAction(tr("Save &As..."), this);
-    saveAsAct->setStatusTip(tr("Save the document under a new name"));
-    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-
-    exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcut(tr("Ctrl+Q"));
-    exitAct->setStatusTip(tr("Exit the application"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-
-    cutAct = new QAction(QIcon(":/editcut.xpm"), tr("Cu&t"), this);
-    cutAct->setShortcut(tr("Ctrl+X"));
-    cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-                            "clipboard"));
-    //connect(cutAct, SIGNAL(triggered()), textEdit, SLOT(cut()));
-
-    copyAct = new QAction(QIcon(":/editcopy.xpm"), tr("&Copy"), this);
-    copyAct->setShortcut(tr("Ctrl+C"));
-    copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-                             "clipboard"));
-    //connect(copyAct, SIGNAL(triggered()), textEdit, SLOT(copy()));
-
-    pasteAct = new QAction(QIcon(":/editpaste.xpm"), tr("&Paste"), this);
-    pasteAct->setShortcut(tr("Ctrl+V"));
-    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-                              "selection"));
-    //connect(pasteAct, SIGNAL(triggered()), textEdit, SLOT(paste()));
-
-    aboutAct = new QAction(tr("&About"), this);
-    aboutAct->setStatusTip(tr("Show the application's About box"));
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-    aboutQtAct = new QAction(tr("About &Qt"), this);
-    aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-
-    cutAct->setEnabled(false);
-    copyAct->setEnabled(false);
-    //connect(textEdit, SIGNAL(copyAvailable(bool)),
-    //        cutAct, SLOT(setEnabled(bool)));
-    //connect(textEdit, SIGNAL(copyAvailable(bool)),
-    //        copyAct, SLOT(setEnabled(bool)));
+    createFileActions();
+    createAboutActions();
+    createZoomActions();
 }
 
 void app2::createMenus()
@@ -159,10 +105,9 @@ void app2::createMenus()
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
-    editMenu = menuBar()->addMenu(tr("&Edit"));
-    editMenu->addAction(cutAct);
-    editMenu->addAction(copyAct);
-    editMenu->addAction(pasteAct);
+    viewMenu = menuBar()->addMenu(tr("&View"));
+    viewMenu->addAction(zoomInAct);
+    viewMenu->addAction(zoomOutAct);
 
     menuBar()->addSeparator();
 
@@ -178,10 +123,7 @@ void app2::createToolBars()
     fileToolBar->addAction(openAct);
     fileToolBar->addAction(saveAct);
 
-    editToolBar = addToolBar(tr("Edit"));
-    editToolBar->addAction(cutAct);
-    editToolBar->addAction(copyAct);
-    editToolBar->addAction(pasteAct);
+    editToolBar = addToolBar(tr("View"));
 }
 
 void app2::createStatusBar()
@@ -191,18 +133,20 @@ void app2::createStatusBar()
 
 void app2::readSettings()
 {
-    QSettings settings("Trolltech", "Application Example");
-    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-    QSize size = settings.value("size", QSize(400, 400)).toSize();
+    QSettings settings("cjd", "App2");
+    QPoint pos = settings.value("pos", QPoint(100, 100)).toPoint();
+    QSize size = settings.value("size", QSize(450, 450)).toSize();
     resize(size);
     move(pos);
+    zoomFactor = settings.value("zoomFactor", 1.2).toDouble();
 }
 
 void app2::writeSettings()
 {
-    QSettings settings("Trolltech", "Application Example");
+    QSettings settings("cjd", "App2");
     settings.setValue("pos", pos());
     settings.setValue("size", size());
+    settings.setValue("zoomFactor", zoomFactor);
 }
 
 bool app2::maybeSave()
@@ -226,18 +170,20 @@ bool app2::maybeSave()
 
 void app2::loadFile(const QString &fileName)
 {
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    image = new QImage(fileName);
+    QApplication::restoreOverrideCursor();
+
+    if (image->isNull()) {
         QMessageBox::warning(this, tr("Application"),
-                             tr("Cannot read file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
+                             tr("Cannot read image file %1.")
+                             .arg(fileName));
         return;
     }
 
-    QTextStream in(&file);
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    //textEdit->setPlainText(in.readAll());
+    scene->setBackgroundBrush(*image);
+    fitViewToImage();
     QApplication::restoreOverrideCursor();
 
     setCurrentFile(fileName);
@@ -273,7 +219,7 @@ void app2::setCurrentFile(const QString &fileName)
 
     QString shownName;
     if (curFile.isEmpty())
-        shownName = "untitled.txt";
+        shownName = "untitled";
     else
         shownName = strippedName(curFile);
 
@@ -290,3 +236,100 @@ app2::~app2()
 
 }
 
+
+
+/*!
+    \fn app2::zoomIn()
+ */
+void app2::zoomIn()
+{
+    view->scale(zoomFactor, zoomFactor);
+    statusBar()->showMessage(tr("Zoomed in"), 2000);
+}
+
+
+/*!
+    \fn app2::zoomOut()
+ */
+void app2::zoomOut()
+{
+    view->scale(1/zoomFactor, 1/zoomFactor);
+    if(view->matrix().m11() < minScale)
+        fitViewToImage();
+    statusBar()->showMessage(tr("Zoomed out"), 2000);
+}
+
+
+/*!
+    \fn app2::createZoomActions()
+ */
+void app2::createZoomActions()
+{
+    zoomInAct = new QAction(tr("Zoom &In"), this);
+    zoomInAct->setShortcut(tr("Ctrl++"));
+    zoomInAct->setStatusTip(tr("Zooms In"));
+    connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
+
+    zoomOutAct = new QAction(tr("Zoom &Out"), this);
+    zoomOutAct->setShortcut(tr("Ctrl+-"));
+    zoomOutAct->setStatusTip(tr("Zooms Out"));
+    connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
+}
+
+
+/*!
+    \fn app2::createAboutActions()
+ */
+void app2::createAboutActions()
+{
+    aboutAct = new QAction(tr("&About"), this);
+    aboutAct->setStatusTip(tr("Show the application's About box"));
+    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+    aboutQtAct = new QAction(tr("About &Qt"), this);
+    aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
+    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+}
+
+
+/*!
+    \fn app2::createFileActions()
+ */
+void app2::createFileActions()
+{
+    newAct = new QAction(QIcon(":/filenew.xpm"), tr("&New"), this);
+    newAct->setShortcut(tr("Ctrl+N"));
+    newAct->setStatusTip(tr("Create a new file"));
+    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
+
+    openAct = new QAction(QIcon(":/fileopen.xpm"), tr("&Open..."), this);
+    openAct->setShortcut(tr("Ctrl+O"));
+    openAct->setStatusTip(tr("Open an existing file"));
+    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+
+    saveAct = new QAction(QIcon(":/filesave.xpm"), tr("&Save"), this);
+    saveAct->setShortcut(tr("Ctrl+S"));
+    saveAct->setStatusTip(tr("Save the document to disk"));
+    connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
+
+    saveAsAct = new QAction(tr("Save &As..."), this);
+    saveAsAct->setStatusTip(tr("Save the document under a new name"));
+    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+
+    exitAct = new QAction(tr("E&xit"), this);
+    exitAct->setShortcut(tr("Ctrl+Q"));
+    exitAct->setStatusTip(tr("Exit the application"));
+    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+}
+
+
+/*!
+    \fn app2::FitViewToImage()
+ */
+void app2::fitViewToImage()
+{
+    scene->setSceneRect(image->rect());
+    view->setSceneRect(image->rect());
+    view->fitInView(image->rect());
+    minScale = view->matrix().m11();
+}
