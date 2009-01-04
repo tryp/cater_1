@@ -6,6 +6,9 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 
+#include <QGraphicsScene>
+#include <QGraphicsView>
+
 class QAction;
 class QMenu;
 class QTextEdit;
@@ -60,6 +63,9 @@ class app2: public QMainWindow
         QAction *pasteAct;
         QAction *aboutAct;
         QAction *aboutQtAct;
+        QGraphicsScene *scene;
+    QGraphicsView *view;
+protected:
 };
 
 #endif

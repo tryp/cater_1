@@ -10,8 +10,13 @@
 
 app2::app2()
 {
-    textEdit = new QTextEdit;
-    setCentralWidget(textEdit);
+    scene = new QGraphicsScene;
+    //view.setRenderHint(QPainter::Antialiasing);
+
+    view = new QGraphicsView(scene);
+
+    setCentralWidget(view);
+
 
     createActions();
     createMenus();
@@ -20,8 +25,8 @@ app2::app2()
 
     readSettings();
 
-    connect(textEdit->document(), SIGNAL(contentsChanged()),
-            this, SLOT(documentWasModified()));
+    //connect(textEdit->document(), SIGNAL(contentsChanged()),
+    //        this, SLOT(documentWasModified()));
 
     setCurrentFile("");
 }
@@ -39,7 +44,7 @@ void app2::closeEvent(QCloseEvent *event)
 void app2::newFile()
 {
     if (maybeSave()) {
-        textEdit->clear();
+        //textEdit->clear();
         setCurrentFile("");
     }
 }
@@ -114,19 +119,19 @@ void app2::createActions()
     cutAct->setShortcut(tr("Ctrl+X"));
     cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                             "clipboard"));
-    connect(cutAct, SIGNAL(triggered()), textEdit, SLOT(cut()));
+    //connect(cutAct, SIGNAL(triggered()), textEdit, SLOT(cut()));
 
     copyAct = new QAction(QIcon(":/editcopy.xpm"), tr("&Copy"), this);
     copyAct->setShortcut(tr("Ctrl+C"));
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
-    connect(copyAct, SIGNAL(triggered()), textEdit, SLOT(copy()));
+    //connect(copyAct, SIGNAL(triggered()), textEdit, SLOT(copy()));
 
     pasteAct = new QAction(QIcon(":/editpaste.xpm"), tr("&Paste"), this);
     pasteAct->setShortcut(tr("Ctrl+V"));
     pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    connect(pasteAct, SIGNAL(triggered()), textEdit, SLOT(paste()));
+    //connect(pasteAct, SIGNAL(triggered()), textEdit, SLOT(paste()));
 
     aboutAct = new QAction(tr("&About"), this);
     aboutAct->setStatusTip(tr("Show the application's About box"));
@@ -138,10 +143,10 @@ void app2::createActions()
 
     cutAct->setEnabled(false);
     copyAct->setEnabled(false);
-    connect(textEdit, SIGNAL(copyAvailable(bool)),
-            cutAct, SLOT(setEnabled(bool)));
-    connect(textEdit, SIGNAL(copyAvailable(bool)),
-            copyAct, SLOT(setEnabled(bool)));
+    //connect(textEdit, SIGNAL(copyAvailable(bool)),
+    //        cutAct, SLOT(setEnabled(bool)));
+    //connect(textEdit, SIGNAL(copyAvailable(bool)),
+    //        copyAct, SLOT(setEnabled(bool)));
 }
 
 void app2::createMenus()
@@ -202,6 +207,7 @@ void app2::writeSettings()
 
 bool app2::maybeSave()
 {
+/*
     if (textEdit->document()->isModified()) {
         int ret = QMessageBox::warning(this, tr("Application"),
                                        tr("The document has been modified.\n"
@@ -214,6 +220,7 @@ bool app2::maybeSave()
         else if (ret == QMessageBox::Cancel)
             return false;
     }
+*/
     return true;
 }
 
@@ -230,7 +237,7 @@ void app2::loadFile(const QString &fileName)
 
     QTextStream in(&file);
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    textEdit->setPlainText(in.readAll());
+    //textEdit->setPlainText(in.readAll());
     QApplication::restoreOverrideCursor();
 
     setCurrentFile(fileName);
@@ -250,7 +257,7 @@ bool app2::saveFile(const QString &fileName)
 
     QTextStream out(&file);
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    out << textEdit->toPlainText();
+    //out << textEdit->toPlainText();
     QApplication::restoreOverrideCursor();
 
     setCurrentFile(fileName);
@@ -261,7 +268,7 @@ bool app2::saveFile(const QString &fileName)
 void app2::setCurrentFile(const QString &fileName)
 {
     curFile = fileName;
-    textEdit->document()->setModified(false);
+    //textEdit->document()->setModified(false);
     setWindowModified(false);
 
     QString shownName;
