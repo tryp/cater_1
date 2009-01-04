@@ -19,23 +19,23 @@
 QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_app2[] = {
 
- // content:
-       1,       // revision
-       0,       // classname
-       0,    0, // classinfo
-       6,   10, // methods
-       0,    0, // properties
-       0,    0, // enums/sets
+// content:
+    1,       // revision
+    0,       // classname
+    0,    0, // classinfo
+    6,   10, // methods
+    0,    0, // properties
+    0,    0, // enums/sets
 
- // slots: signature, parameters, type, tag, flags
-       6,    5,    5,    5, 0x08,
-      16,    5,    5,    5, 0x08,
-      28,    5,   23,    5, 0x08,
-      35,    5,   23,    5, 0x08,
-      44,    5,    5,    5, 0x08,
-      52,    5,    5,    5, 0x08,
+// slots: signature, parameters, type, tag, flags
+    6,    5,    5,    5, 0x08,
+    16,    5,    5,    5, 0x08,
+    28,    5,   23,    5, 0x08,
+    35,    5,   23,    5, 0x08,
+    44,    5,    5,    5, 0x08,
+    52,    5,    5,    5, 0x08,
 
-       0        // eod
+    0        // eod
 };
 
 static const char qt_meta_stringdata_app2[] = {
@@ -45,7 +45,7 @@ static const char qt_meta_stringdata_app2[] = {
 
 const QMetaObject app2::staticMetaObject = {
     { &QMainWindow::staticMetaObject, qt_meta_stringdata_app2,
-      qt_meta_data_app2, 0 }
+        qt_meta_data_app2, 0 }
 };
 
 const QMetaObject *app2::metaObject() const
@@ -68,14 +68,28 @@ int app2::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: newFile(); break;
-        case 1: open(); break;
-        case 2: { bool _r = save();
-            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 3: { bool _r = saveAs();
-            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 4: about(); break;
-        case 5: documentWasModified(); break;
+            case 0:
+                newFile();
+                break;
+            case 1:
+                open();
+                break;
+            case 2: {
+                bool _r = save();
+                if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r;
+            }
+            break;
+            case 3: {
+                bool _r = saveAs();
+                if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r;
+            }
+            break;
+            case 4:
+                about();
+                break;
+            case 5:
+                documentWasModified();
+                break;
         }
         _id -= 6;
     }

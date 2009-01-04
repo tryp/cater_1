@@ -5,10 +5,10 @@
 
 int main(int argc, char *argv[])
 {
-      Q_INIT_RESOURCE(application);
-      QApplication app(argc, argv);
-      app2 * mw = new app2();
-      mw->show();
-      return app.exec();
+    Q_INIT_RESOURCE(application);
+    QApplication app(argc, argv);
+    app2 * mw = new app2();
+    mw->show();
+    return app.exec();
 }
 
