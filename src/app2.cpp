@@ -8,6 +8,8 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 
+
+
 app2::app2()
 {
     scene = new QGraphicsScene;
@@ -93,6 +95,7 @@ void app2::createActions()
     createFileActions();
     createAboutActions();
     createZoomActions();
+    createFeatureActions();
 }
 
 void app2::createMenus()
@@ -108,6 +111,9 @@ void app2::createMenus()
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(zoomInAct);
     viewMenu->addAction(zoomOutAct);
+
+    featureMenu = menuBar()->addMenu(tr("&Features"));
+    featureMenu->addAction(placeFeaturePointAct);
 
     menuBar()->addSeparator();
 
@@ -322,6 +328,17 @@ void app2::createFileActions()
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 }
 
+/*!
+    \fn app2::createFeatureActions()
+ */
+void app2::createFeatureActions()
+{
+    placeFeaturePointAct = new QAction(tr("&Place Feature"), this);
+    placeFeaturePointAct->setShortcut(tr("Ctrl+P"));
+    placeFeaturePointAct->setStatusTip(tr("Place a feature in the scene"));
+    connect(placeFeaturePointAct, SIGNAL(triggered()), this, SLOT(newFeaturePoint()));
+}
+
 
 /*!
     \fn app2::FitViewToImage()
@@ -333,3 +350,16 @@ void app2::fitViewToImage()
     view->fitInView(image->rect());
     minScale = view->matrix().m11();
 }
+
+
+/*!
+    \fn app2::newFeaturePoint()
+ */
+void app2::newFeaturePoint()
+{
+    FeaturePoint *p = new FeaturePoint();
+    scene->addItem(p);
+    p->setPos(100,100);
+}
+
+

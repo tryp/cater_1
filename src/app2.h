@@ -9,6 +9,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
+#include "featurepoint.h"
+
 class QAction;
 class QMenu;
 class QTextEdit;
@@ -20,6 +22,7 @@ class app2: public QMainWindow
     public:
         app2();
         ~app2();
+    void createFeatureActions();
 
     protected:
         void closeEvent(QCloseEvent *event);
@@ -33,6 +36,7 @@ class app2: public QMainWindow
         void documentWasModified();
     void zoomIn();
     void zoomOut();
+    void newFeaturePoint();
        
 
     private:
@@ -53,6 +57,7 @@ class app2: public QMainWindow
 
         QMenu *fileMenu;
         QMenu *viewMenu;
+        QMenu *featureMenu;
         QMenu *helpMenu;
         QToolBar *fileToolBar;
         QToolBar *editToolBar;
@@ -66,6 +71,8 @@ class app2: public QMainWindow
 
         QAction *zoomInAct;
         QAction *zoomOutAct;
+
+        QAction *placeFeaturePointAct;
 
         QGraphicsScene *scene;
     QGraphicsView *view;
