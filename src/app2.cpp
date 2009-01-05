@@ -15,10 +15,12 @@ app2::app2()
     scene = new QGraphicsScene;
 
     view = new QGraphicsView(scene);
-    //view->setRenderHint(QPainter::Antialiasing);
+    view->setRenderHint(QPainter::Antialiasing);
     view->setAlignment(Qt::AlignLeft | Qt::AlignTop);    
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    view->setDragMode(QGraphicsView::ScrollHandDrag);
 
     setCentralWidget(view);
 
@@ -351,7 +353,6 @@ void app2::fitViewToImage()
     minScale = view->matrix().m11();
 }
 
-
 /*!
     \fn app2::newFeaturePoint()
  */
@@ -361,5 +362,6 @@ void app2::newFeaturePoint()
     scene->addItem(p);
     p->setPos(100,100);
 }
+
 
 

@@ -25,6 +25,11 @@ private:
     double innerRadius;
     double outerRadius;
     QColor color;
+protected:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
 #endif

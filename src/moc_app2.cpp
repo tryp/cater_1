@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'app2.h'
 **
-** Created: Sun Jan 4 20:16:49 2009
+** Created: Sun Jan 4 21:45:39 2009
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
 **
 ** WARNING! All changes made in this file will be lost!

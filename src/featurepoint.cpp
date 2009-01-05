@@ -1,4 +1,4 @@
-#include <QPainter>
+#include <QtGui>
 
 #include "featurepoint.h"
 
@@ -19,7 +19,7 @@ FeaturePoint::~FeaturePoint()
  */
 QRectF FeaturePoint::boundingRect() const
 {
-    qreal adjust = 0.5;
+    qreal adjust = 2;
 
     return QRectF( QPointF(-outerRadius-adjust, -outerRadius-adjust), 
                     QPointF(outerRadius+adjust, outerRadius+adjust));
@@ -50,3 +50,36 @@ void FeaturePoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
 }
 
 
+
+
+/*!
+    \fn FeaturePoint::mousePressEvent(QGraphicsSceneMouseEvent *event)
+ */
+void FeaturePoint::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() != Qt::LeftButton) {
+        event->ignore();
+        return;
+    }
+
+    setCursor(Qt::CrossCursor);
+}
+
+
+/*!
+    \fn FeaturePoint::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+ */
+void FeaturePoint::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    setPos(event->scenePos());
+
+}
+
+
+/*!
+    \fn FeaturePoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+ */
+void FeaturePoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    setCursor(Qt::OpenHandCursor);
+}
